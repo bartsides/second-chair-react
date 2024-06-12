@@ -10,11 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { steps } from "../../config/steps";
 import "./NavMenu.css";
 
 export default function NavMenu() {
+  const navigate = useNavigate();
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const [profileMenuAnchorEl, setProfileMenuAnchorEl] = React.useState(null);
 
@@ -32,6 +33,12 @@ export default function NavMenu() {
 
   const handleProfileMenuClose = () => {
     setProfileMenuAnchorEl(null);
+  };
+
+  const handleNavigate = (route) => {
+    handleMenuClose();
+    handleProfileMenuClose();
+    navigate(route);
   };
 
   const topLeftOrigin = { vertical: "top", horizontal: "left" };
@@ -62,16 +69,19 @@ export default function NavMenu() {
             open={Boolean(menuAnchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem>
-              <div class="menu-icon">
+            <MenuItem onClick={(event) => handleNavigate("/trials")}>
+              <div className="menu-icon">
                 <Gavel />
               </div>
               Trials
             </MenuItem>
             {steps.map((step, index) => {
               return (
-                <MenuItem key={index}>
-                  <div class="menu-icon">{step.icon}</div>
+                <MenuItem
+                  key={index}
+                  onClick={() => handleNavigate(step.route)}
+                >
+                  <div className="menu-icon">{step.icon}</div>
                   {step.title}
                 </MenuItem>
               );
